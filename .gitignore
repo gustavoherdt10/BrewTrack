@@ -1,0 +1,37 @@
+# Ambiente virtual
+.venv/
+venv/
+
+# Variáveis e credenciais
+.env
+
+# Cache do Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Testes e análise
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Arquivos de IDE
+.idea/
+
+# Logs
+*.log
+logs/
+
+# Arquivos temporários
+*.tmp
+*.temp
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
+
+# Build e distribuição
+build/
+dist/
+*.egg-info/
