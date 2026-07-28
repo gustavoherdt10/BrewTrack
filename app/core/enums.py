@@ -1,0 +1,30 @@
+from enum import Enum
+
+
+class TipoPessoa(str, Enum):
+    FISICA = "FISICA"
+    JURIDICA = "JURIDICA"
+
+
+class PerfilUsuario(str, Enum):
+    ADMINISTRADOR = "ADMINISTRADOR"
+    OPERADOR = "OPERADOR"
+    CONSULTA = "CONSULTA"
+
+
+class StatusBarril(str, Enum):
+    DISPONIVEL = "DISPONIVEL"
+    COM_CLIENTE = "COM_CLIENTE"
+    EM_MANUTENCAO = "EM_MANUTENCAO"
+    EXTRAVIADO = "EXTRAVIADO"
+    BAIXADO = "BAIXADO"
+
+
+class TipoMovimentacao(str, Enum):
+    ENTRADA_ESTOQUE = "ENTRADA_ESTOQUE"
+    SAIDA_CLIENTE = "SAIDA_CLIENTE"
+    RETORNO_CLIENTE = "RETORNO_CLIENTE"
+    ENVIO_MANUTENCAO = "ENVIO_MANUTENCAO"
+    RETORNO_MANUTENCAO = "RETORNO_MANUTENCAO"
+    BAIXA = "BAIXA"
+    AJUSTE = "AJUSTE"
