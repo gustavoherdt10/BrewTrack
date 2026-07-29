@@ -12,7 +12,6 @@ from app.services.usuario_service import (
     listar_usuarios,
 )
 
-
 router = APIRouter(
     prefix="/usuarios",
     tags=["Usuários"],

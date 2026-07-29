@@ -1,11 +1,11 @@
 from fastapi import APIRouter
 
 from app.api.v1.endpoints import (
-    health,
     barris,
-    usuarios,
     clientes,
+    health,
     movimentacoes,
+    usuarios,
 )
 
 api_router = APIRouter()

@@ -30,7 +30,7 @@ class Usuario(TimestampMixin, Base):
     )
 
     senha_hash: Mapped[str] = mapped_column(
-            String(255),
+        String(255),
         nullable=False,
     )
 

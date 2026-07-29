@@ -3,14 +3,22 @@ from __future__ import annotations
 from datetime import date
 from typing import TYPE_CHECKING
 
-from sqlalchemy import CheckConstraint, String, Text
-from sqlalchemy import Enum as SqlEnum
+from sqlalchemy import (
+    CheckConstraint,
+    ForeignKey,
+    String,
+    Text,
+)
+from sqlalchemy import (
+    Enum as SqlEnum,
+)
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.enums import StatusBarril
 from app.db.base import Base, TimestampMixin
 
 if TYPE_CHECKING:
+    from app.db.models.cliente import Cliente
     from app.db.models.movimentacao import Movimentacao
 
 
@@ -19,8 +27,8 @@ class Barril(TimestampMixin, Base):
 
     __table_args__ = (
         CheckConstraint(
-            "capacidade_litros > 0",
-            name="capacidade_litros_positiva",
+            "capacidade_litros IN (15, 30, 50)",
+            name="capacidade_litros_permitida",
         ),
     )
 
@@ -50,6 +58,15 @@ class Barril(TimestampMixin, Base):
         index=True,
     )
 
+    cliente_atual_id: Mapped[int | None] = mapped_column(
+        ForeignKey(
+            "clientes.id",
+            ondelete="RESTRICT",
+        ),
+        nullable=True,
+        index=True,
+    )
+
     data_aquisicao: Mapped[date | None] = mapped_column(
         nullable=True,
     )
@@ -57,6 +74,10 @@ class Barril(TimestampMixin, Base):
     observacao: Mapped[str | None] = mapped_column(
         Text,
         nullable=True,
+    )
+
+    cliente_atual: Mapped[Cliente | None] = relationship(
+        foreign_keys=[cliente_atual_id],
     )
 
     movimentacoes: Mapped[list[Movimentacao]] = relationship(

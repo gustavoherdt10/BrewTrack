@@ -35,12 +35,7 @@ def listar_usuarios(
     offset: int = 0,
     limite: int = 100,
 ) -> list[Usuario]:
-    statement = (
-        select(Usuario)
-        .order_by(Usuario.id)
-        .offset(offset)
-        .limit(limite)
-    )
+    statement = select(Usuario).order_by(Usuario.id).offset(offset).limit(limite)
 
     return list(db.scalars(statement).all())
 
@@ -53,9 +48,7 @@ def criar_usuario(
     usuario_existente = buscar_usuario_por_email(db, dados.email)
 
     if usuario_existente is not None:
-        raise UsuarioDuplicadoError(
-            "Já existe um usuário cadastrado com este e-mail."
-        )
+        raise UsuarioDuplicadoError("Já existe um usuário cadastrado com este e-mail.")
 
     usuario = Usuario(
         nome=dados.nome,

@@ -1,4 +1,4 @@
-from datetime import date, datetime, timezone
+from datetime import date, datetime
 
 from pydantic import (
     BaseModel,
@@ -10,7 +10,7 @@ from pydantic import (
 from app.core.enums import TipoMovimentacao
 
 
-class MovimentacaoBase(BaseModel):
+class MovimentacaoCreate(BaseModel):
     barril_id: int = Field(gt=0)
 
     cliente_id: int | None = Field(
@@ -22,10 +22,6 @@ class MovimentacaoBase(BaseModel):
 
     tipo: TipoMovimentacao
 
-    data_movimentacao: datetime = Field(
-        default_factory=lambda: datetime.now(timezone.utc),
-    )
-
     data_prevista_retorno: date | None = None
 
     responsavel_recebimento: str | None = Field(
@@ -36,28 +32,33 @@ class MovimentacaoBase(BaseModel):
     observacao: str | None = None
 
     @model_validator(mode="after")
-    def validar_cliente_obrigatorio(
-        self,
-    ) -> "MovimentacaoBase":
-        tipos_com_cliente = {
+    def validar_movimentacao(self) -> "MovimentacaoCreate":
+        tipos_implementados = {
             TipoMovimentacao.SAIDA_CLIENTE,
             TipoMovimentacao.RETORNO_CLIENTE,
         }
 
-        if self.tipo in tipos_com_cliente and self.cliente_id is None:
+        if self.tipo not in tipos_implementados:
             raise ValueError(
-                "O cliente é obrigatório para saída ou retorno de cliente."
+                "Nesta etapa são permitidas somente SAIDA_CLIENTE e RETORNO_CLIENTE."
             )
+
+        if self.cliente_id is None:
+            raise ValueError("O cliente é obrigatório para saída ou retorno.")
 
         return self
 
 
-class MovimentacaoCreate(MovimentacaoBase):
-    pass
-
-
-class MovimentacaoRead(MovimentacaoBase):
+class MovimentacaoRead(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
     id: int
+    barril_id: int
+    cliente_id: int | None
+    usuario_id: int
+    tipo: TipoMovimentacao
+    data_movimentacao: datetime
+    data_prevista_retorno: date | None
+    responsavel_recebimento: str | None
+    observacao: str | None
     criado_em: datetime

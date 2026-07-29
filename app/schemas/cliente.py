@@ -1,8 +1,24 @@
+import re
 from datetime import datetime
 
-from pydantic import BaseModel, ConfigDict, EmailStr, Field
+from pydantic import (
+    BaseModel,
+    ConfigDict,
+    EmailStr,
+    Field,
+    field_validator,
+)
 
 from app.core.enums import TipoPessoa
+
+
+def somente_digitos(valor: str | None) -> str | None:
+    if valor is None:
+        return None
+
+    valor_normalizado = re.sub(r"\D", "", valor)
+
+    return valor_normalizado or None
 
 
 class ClienteBase(BaseModel):
@@ -59,7 +75,7 @@ class ClienteBase(BaseModel):
         default=None,
         min_length=2,
         max_length=2,
-        pattern=r"^[A-Za-z]{2}$",
+        pattern=r"^[A-Z]{2}$",
     )
 
     cep: str | None = Field(
@@ -68,6 +84,33 @@ class ClienteBase(BaseModel):
     )
 
     ativo: bool = True
+
+    @field_validator("documento", mode="before")
+    @classmethod
+    def normalizar_documento(
+        cls,
+        valor: str | None,
+    ) -> str | None:
+        return somente_digitos(valor)
+
+    @field_validator("cep", mode="before")
+    @classmethod
+    def normalizar_cep(
+        cls,
+        valor: str | None,
+    ) -> str | None:
+        return somente_digitos(valor)
+
+    @field_validator("estado", mode="before")
+    @classmethod
+    def normalizar_estado(
+        cls,
+        valor: str | None,
+    ) -> str | None:
+        if valor is None:
+            return None
+
+        return valor.strip().upper()
 
 
 class ClienteCreate(ClienteBase):
@@ -129,7 +172,7 @@ class ClienteUpdate(BaseModel):
         default=None,
         min_length=2,
         max_length=2,
-        pattern=r"^[A-Za-z]{2}$",
+        pattern=r"^[A-Z]{2}$",
     )
 
     cep: str | None = Field(
@@ -138,6 +181,33 @@ class ClienteUpdate(BaseModel):
     )
 
     ativo: bool | None = None
+
+    @field_validator("documento", mode="before")
+    @classmethod
+    def normalizar_documento(
+        cls,
+        valor: str | None,
+    ) -> str | None:
+        return somente_digitos(valor)
+
+    @field_validator("cep", mode="before")
+    @classmethod
+    def normalizar_cep(
+        cls,
+        valor: str | None,
+    ) -> str | None:
+        return somente_digitos(valor)
+
+    @field_validator("estado", mode="before")
+    @classmethod
+    def normalizar_estado(
+        cls,
+        valor: str | None,
+    ) -> str | None:
+        if valor is None:
+            return None
+
+        return valor.strip().upper()
 
 
 class ClienteRead(ClienteBase):
