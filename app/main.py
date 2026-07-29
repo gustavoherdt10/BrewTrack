@@ -1,26 +1,50 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.v1.router import api_router
-from app.core.config import settings
+
 
 app = FastAPI(
-    title=settings.app_name,
-    version=settings.app_version,
-    description=("API para gestão de estoque, rastreamento e movimentação de barris."),
+    title="BrewTrack API",
+    description=(
+        "API para controle de estoque, rastreamento de barris "
+        "e registro de movimentações."
+    ),
+    version="0.1.0",
+    docs_url="/docs",
+    redoc_url="/redoc",
+)
+
+origins = [
+    "http://127.0.0.1:5500",
+    "http://localhost:5500",
+    "http://127.0.0.1:3000",
+    "http://localhost:3000",
+    "http://127.0.0.1:5173",
+    "http://localhost:5173",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+app.include_router(
+    api_router,
+    prefix="/api/v1",
 )
 
 
 @app.get(
     "/",
-    tags=["Raiz"],
-    summary="Apresentar informações da API",
+    tags=["Aplicação"],
 )
 def raiz() -> dict[str, str]:
     return {
-        "aplicacao": settings.app_name,
-        "versao": settings.app_version,
+        "nome": "BrewTrack API",
+        "status": "online",
         "documentacao": "/docs",
     }
-
-
-app.include_router(api_router, prefix=settings.api_v1_prefix)

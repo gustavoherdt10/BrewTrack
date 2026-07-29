@@ -22,3 +22,8 @@ Criar o ambiente virtual:
 
 ```powershell
 py -m venv .venv
+
+Rodar o Servidor
+
+```powershell
+uvicorn app.main:app --reload

@@ -45,9 +45,19 @@ class UsuarioUpdate(BaseModel):
     ativo: bool | None = None
 
 
-class UsuarioRead(UsuarioBase):
+class UsuarioResponse(UsuarioBase):
+    """
+    Schema utilizado nas respostas da API.
+
+    Não contém o campo senha nem senha_hash.
+    """
+
     model_config = ConfigDict(from_attributes=True)
 
     id: int
     criado_em: datetime
     atualizado_em: datetime
+
+
+# Mantém compatibilidade com códigos anteriores que utilizem UsuarioRead.
+UsuarioRead = UsuarioResponse
