@@ -1,6 +1,12 @@
 from datetime import datetime
 
-from pydantic import BaseModel, ConfigDict, EmailStr, Field
+from pydantic import (
+    BaseModel,
+    ConfigDict,
+    EmailStr,
+    Field,
+    field_validator,
+)
 
 from app.core.enums import PerfilUsuario
 
@@ -16,6 +22,16 @@ class UsuarioBase(BaseModel):
     perfil: PerfilUsuario = PerfilUsuario.OPERADOR
 
     ativo: bool = True
+
+    @field_validator("nome", mode="before")
+    @classmethod
+    def normalizar_nome(cls, nome: str) -> str:
+        return nome.strip()
+
+    @field_validator("email", mode="before")
+    @classmethod
+    def normalizar_email(cls, email: str) -> str:
+        return email.strip().lower()
 
 
 class UsuarioCreate(UsuarioBase):
@@ -44,20 +60,37 @@ class UsuarioUpdate(BaseModel):
 
     ativo: bool | None = None
 
+    @field_validator("nome", mode="before")
+    @classmethod
+    def normalizar_nome(
+        cls,
+        nome: str | None,
+    ) -> str | None:
+        if nome is None:
+            return None
+
+        return nome.strip()
+
+    @field_validator("email", mode="before")
+    @classmethod
+    def normalizar_email(
+        cls,
+        email: str | None,
+    ) -> str | None:
+        if email is None:
+            return None
+
+        return email.strip().lower()
+
 
 class UsuarioResponse(UsuarioBase):
-    """
-    Schema utilizado nas respostas da API.
-
-    Não contém o campo senha nem senha_hash.
-    """
-
-    model_config = ConfigDict(from_attributes=True)
+    model_config = ConfigDict(
+        from_attributes=True,
+    )
 
     id: int
     criado_em: datetime
     atualizado_em: datetime
 
 
-# Mantém compatibilidade com códigos anteriores que utilizem UsuarioRead.
 UsuarioRead = UsuarioResponse

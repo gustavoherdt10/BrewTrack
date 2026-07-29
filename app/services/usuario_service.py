@@ -1,7 +1,8 @@
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
+from app.core.security import gerar_hash_senha
 from app.db.models.usuario import Usuario
 from app.schemas.usuario import UsuarioCreate
 
@@ -18,7 +19,9 @@ def buscar_usuario_por_email(
     db: Session,
     email: str,
 ) -> Usuario | None:
-    statement = select(Usuario).where(Usuario.email == email)
+    email_normalizado = email.strip().lower()
+
+    statement = select(Usuario).where(func.lower(Usuario.email) == email_normalizado)
 
     return db.scalar(statement)
 
@@ -43,16 +46,22 @@ def listar_usuarios(
 def criar_usuario(
     db: Session,
     dados: UsuarioCreate,
-    senha_hash: str,
 ) -> Usuario:
-    usuario_existente = buscar_usuario_por_email(db, dados.email)
+    email_normalizado = str(dados.email).strip().lower()
+
+    usuario_existente = buscar_usuario_por_email(
+        db,
+        email_normalizado,
+    )
 
     if usuario_existente is not None:
         raise UsuarioDuplicadoError("Já existe um usuário cadastrado com este e-mail.")
 
+    senha_hash = gerar_hash_senha(dados.senha)
+
     usuario = Usuario(
-        nome=dados.nome,
-        email=dados.email,
+        nome=dados.nome.strip(),
+        email=email_normalizado,
         senha_hash=senha_hash,
         perfil=dados.perfil,
         ativo=True,
@@ -62,6 +71,7 @@ def criar_usuario(
         db.add(usuario)
         db.commit()
         db.refresh(usuario)
+
     except IntegrityError as erro:
         db.rollback()
 

@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.v1.router import api_router
+from app.core.exception_handlers import registrar_exception_handlers
 
 app = FastAPI(
     title="BrewTrack API",
@@ -13,6 +14,8 @@ app = FastAPI(
     docs_url="/docs",
     redoc_url="/redoc",
 )
+
+registrar_exception_handlers(app)
 
 origins = [
     "http://127.0.0.1:5500",
