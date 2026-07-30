@@ -1,4 +1,5 @@
 from datetime import date, datetime
+from typing import Self
 
 from pydantic import (
     BaseModel,
@@ -10,15 +11,13 @@ from pydantic import (
 from app.core.enums import TipoMovimentacao
 
 
-class MovimentacaoCreate(BaseModel):
+class MovimentacaoCampos(BaseModel):
     barril_id: int = Field(gt=0)
 
     cliente_id: int | None = Field(
         default=None,
         gt=0,
     )
-
-    usuario_id: int = Field(gt=0)
 
     tipo: TipoMovimentacao
 
@@ -31,34 +30,33 @@ class MovimentacaoCreate(BaseModel):
 
     observacao: str | None = None
 
+
+class MovimentacaoCreate(MovimentacaoCampos):
     @model_validator(mode="after")
-    def validar_movimentacao(self) -> "MovimentacaoCreate":
-        tipos_implementados = {
+    def validar_movimentacao_manual(self) -> Self:
+        tipos_permitidos = {
             TipoMovimentacao.SAIDA_CLIENTE,
             TipoMovimentacao.RETORNO_CLIENTE,
         }
 
-        if self.tipo not in tipos_implementados:
+        if self.tipo not in tipos_permitidos:
             raise ValueError(
-                "Nesta etapa são permitidas somente SAIDA_CLIENTE e RETORNO_CLIENTE."
+                "Nesta etapa, o registro manual permite apenas "
+                "SAIDA_CLIENTE e RETORNO_CLIENTE."
             )
 
         if self.cliente_id is None:
-            raise ValueError("O cliente é obrigatório para saída ou retorno.")
+            raise ValueError(
+                "O cliente é obrigatório para saída ou retorno."
+            )
 
         return self
 
 
-class MovimentacaoRead(BaseModel):
+class MovimentacaoRead(MovimentacaoCampos):
     model_config = ConfigDict(from_attributes=True)
 
     id: int
-    barril_id: int
-    cliente_id: int | None
     usuario_id: int
-    tipo: TipoMovimentacao
     data_movimentacao: datetime
-    data_prevista_retorno: date | None
-    responsavel_recebimento: str | None
-    observacao: str | None
     criado_em: datetime

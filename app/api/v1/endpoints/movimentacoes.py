@@ -7,10 +7,16 @@ from fastapi import (
     Query,
     status,
 )
-from sqlalchemy.orm import Session
 
-from app.core.enums import TipoMovimentacao
-from app.db.session import get_db
+from app.api.dependencies import (
+    DatabaseSession,
+    exigir_perfis,
+)
+from app.core.enums import (
+    PerfilUsuario,
+    TipoMovimentacao,
+)
+from app.db.models.usuario import Usuario
 from app.schemas.movimentacao import (
     MovimentacaoCreate,
     MovimentacaoRead,
@@ -21,8 +27,6 @@ from app.services.movimentacao_service import (
     ClienteMovimentacaoNaoEncontradoError,
     MovimentacaoConflitoError,
     MovimentacaoPersistenciaError,
-    UsuarioMovimentacaoInativoError,
-    UsuarioMovimentacaoNaoEncontradoError,
     criar_movimentacao,
     listar_movimentacoes,
 )
@@ -32,7 +36,28 @@ router = APIRouter(
     tags=["Movimentações"],
 )
 
-DatabaseSession = Annotated[Session, Depends(get_db)]
+
+UsuarioOperacionalAtual = Annotated[
+    Usuario,
+    Depends(
+        exigir_perfis(
+            PerfilUsuario.ADMINISTRADOR,
+            PerfilUsuario.OPERADOR,
+        )
+    ),
+]
+
+
+UsuarioLeituraAtual = Annotated[
+    Usuario,
+    Depends(
+        exigir_perfis(
+            PerfilUsuario.ADMINISTRADOR,
+            PerfilUsuario.OPERADOR,
+            PerfilUsuario.CONSULTA,
+        )
+    ),
+]
 
 
 @router.post(
@@ -43,17 +68,18 @@ DatabaseSession = Annotated[Session, Depends(get_db)]
 def registrar_movimentacao(
     dados: MovimentacaoCreate,
     db: DatabaseSession,
+    usuario_atual: UsuarioOperacionalAtual,
 ) -> MovimentacaoRead:
     try:
         return criar_movimentacao(
             db=db,
             dados=dados,
+            usuario_id=usuario_atual.id,
         )
 
     except (
         BarrilMovimentacaoNaoEncontradoError,
         ClienteMovimentacaoNaoEncontradoError,
-        UsuarioMovimentacaoNaoEncontradoError,
     ) as erro:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -61,7 +87,6 @@ def registrar_movimentacao(
         ) from erro
 
     except (
-        UsuarioMovimentacaoInativoError,
         ClienteMovimentacaoInativoError,
         MovimentacaoConflitoError,
     ) as erro:
@@ -83,10 +108,23 @@ def registrar_movimentacao(
 )
 def consultar_movimentacoes(
     db: DatabaseSession,
-    offset: Annotated[int, Query(ge=0)] = 0,
-    limite: Annotated[int, Query(ge=1, le=100)] = 100,
-    barril_id: Annotated[int | None, Query(gt=0)] = None,
-    cliente_id: Annotated[int | None, Query(gt=0)] = None,
+    _usuario_atual: UsuarioLeituraAtual,
+    offset: Annotated[
+        int,
+        Query(ge=0),
+    ] = 0,
+    limite: Annotated[
+        int,
+        Query(ge=1, le=100),
+    ] = 100,
+    barril_id: Annotated[
+        int | None,
+        Query(gt=0),
+    ] = None,
+    cliente_id: Annotated[
+        int | None,
+        Query(gt=0),
+    ] = None,
     tipo: Annotated[
         TipoMovimentacao | None,
         Query(),

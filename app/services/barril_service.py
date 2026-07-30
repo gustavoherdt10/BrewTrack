@@ -5,7 +5,6 @@ from sqlalchemy.orm import Session
 from app.core.enums import StatusBarril, TipoMovimentacao
 from app.db.models.barril import Barril
 from app.db.models.movimentacao import Movimentacao
-from app.db.models.usuario import Usuario
 from app.schemas.barril import BarrilCreate, BarrilUpdate
 
 
@@ -17,14 +16,6 @@ class CodigoBarrilDuplicadoError(Exception):
     pass
 
 
-class UsuarioResponsavelNaoEncontradoError(Exception):
-    pass
-
-
-class UsuarioResponsavelInativoError(Exception):
-    pass
-
-
 class BarrilPersistenciaError(Exception):
     pass
 
@@ -33,14 +24,19 @@ def buscar_barril_por_id(
     db: Session,
     barril_id: int,
 ) -> Barril | None:
-    return db.get(Barril, barril_id)
+    return db.get(
+        Barril,
+        barril_id,
+    )
 
 
 def buscar_barril_por_codigo(
     db: Session,
     codigo: str,
 ) -> Barril | None:
-    comando = select(Barril).where(Barril.codigo == codigo)
+    comando = select(Barril).where(
+        Barril.codigo == codigo
+    )
 
     return db.scalar(comando)
 
@@ -51,14 +47,20 @@ def listar_barris(
     limite: int = 100,
     status: StatusBarril | None = None,
 ) -> list[Barril]:
-    comando = select(Barril).order_by(Barril.codigo)
+    comando = select(Barril).order_by(
+        Barril.codigo
+    )
 
     if status is not None:
-        comando = comando.where(Barril.status == status)
+        comando = comando.where(
+            Barril.status == status
+        )
 
     comando = comando.offset(offset).limit(limite)
 
-    return list(db.scalars(comando).all())
+    return list(
+        db.scalars(comando).all()
+    )
 
 
 def obter_barril(
@@ -71,7 +73,9 @@ def obter_barril(
     )
 
     if barril is None:
-        raise BarrilNaoEncontradoError("Barril não encontrado.")
+        raise BarrilNaoEncontradoError(
+            "Barril não encontrado."
+        )
 
     return barril
 
@@ -81,16 +85,6 @@ def criar_barril(
     dados: BarrilCreate,
     usuario_id: int,
 ) -> Barril:
-    usuario = db.get(Usuario, usuario_id)
-
-    if usuario is None:
-        raise UsuarioResponsavelNaoEncontradoError(
-            "Usuário responsável não encontrado."
-        )
-
-    if not usuario.ativo:
-        raise UsuarioResponsavelInativoError("O usuário responsável está inativo.")
-
     barril_existente = buscar_barril_por_codigo(
         db=db,
         codigo=dados.codigo,
@@ -116,10 +110,13 @@ def criar_barril(
             cliente_id=None,
             usuario_id=usuario_id,
             tipo=TipoMovimentacao.ENTRADA_ESTOQUE,
-            observacao="Cadastro inicial do barril no estoque.",
+            observacao=(
+                "Cadastro inicial do barril no estoque."
+            ),
         )
 
         db.add(movimentacao_inicial)
+
         db.commit()
         db.refresh(barril)
 
@@ -135,7 +132,9 @@ def criar_barril(
     except SQLAlchemyError as erro:
         db.rollback()
 
-        raise BarrilPersistenciaError("Não foi possível cadastrar o barril.") from erro
+        raise BarrilPersistenciaError(
+            "Não foi possível cadastrar o barril."
+        ) from erro
 
 
 def atualizar_barril(
@@ -148,7 +147,10 @@ def atualizar_barril(
         barril_id=barril_id,
     )
 
-    alteracoes = dados.model_dump(exclude_unset=True)
+    alteracoes = dados.model_dump(
+        exclude_unset=True
+    )
+
     codigo = alteracoes.get("codigo")
 
     if codigo is not None:
@@ -157,13 +159,20 @@ def atualizar_barril(
             codigo=codigo,
         )
 
-        if barril_existente is not None and barril_existente.id != barril.id:
+        if (
+            barril_existente is not None
+            and barril_existente.id != barril.id
+        ):
             raise CodigoBarrilDuplicadoError(
                 "Já existe um barril cadastrado com este código."
             )
 
     for campo, valor in alteracoes.items():
-        setattr(barril, campo, valor)
+        setattr(
+            barril,
+            campo,
+            valor,
+        )
 
     try:
         db.commit()
@@ -181,4 +190,6 @@ def atualizar_barril(
     except SQLAlchemyError as erro:
         db.rollback()
 
-        raise BarrilPersistenciaError("Não foi possível atualizar o barril.") from erro
+        raise BarrilPersistenciaError(
+            "Não foi possível atualizar o barril."
+        ) from erro

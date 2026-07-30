@@ -4,13 +4,16 @@ from fastapi import (
     APIRouter,
     Depends,
     HTTPException,
-    Path,
     Query,
     status,
 )
-from sqlalchemy.orm import Session
 
-from app.db.session import get_db
+from app.api.dependencies import (
+    DatabaseSession,
+    exigir_perfis,
+)
+from app.core.enums import PerfilUsuario
+from app.db.models.usuario import Usuario
 from app.schemas.cliente import (
     ClienteCreate,
     ClienteRead,
@@ -31,7 +34,28 @@ router = APIRouter(
     tags=["Clientes"],
 )
 
-DatabaseSession = Annotated[Session, Depends(get_db)]
+
+UsuarioOperacionalAtual = Annotated[
+    Usuario,
+    Depends(
+        exigir_perfis(
+            PerfilUsuario.ADMINISTRADOR,
+            PerfilUsuario.OPERADOR,
+        )
+    ),
+]
+
+
+UsuarioLeituraAtual = Annotated[
+    Usuario,
+    Depends(
+        exigir_perfis(
+            PerfilUsuario.ADMINISTRADOR,
+            PerfilUsuario.OPERADOR,
+            PerfilUsuario.CONSULTA,
+        )
+    ),
+]
 
 
 @router.post(
@@ -42,6 +66,7 @@ DatabaseSession = Annotated[Session, Depends(get_db)]
 def cadastrar_cliente(
     dados: ClienteCreate,
     db: DatabaseSession,
+    _usuario_atual: UsuarioOperacionalAtual,
 ) -> ClienteRead:
     try:
         return criar_cliente(
@@ -68,9 +93,19 @@ def cadastrar_cliente(
 )
 def consultar_clientes(
     db: DatabaseSession,
-    offset: Annotated[int, Query(ge=0)] = 0,
-    limite: Annotated[int, Query(ge=1, le=100)] = 100,
-    ativo: Annotated[bool | None, Query()] = None,
+    _usuario_atual: UsuarioLeituraAtual,
+    offset: Annotated[
+        int,
+        Query(ge=0),
+    ] = 0,
+    limite: Annotated[
+        int,
+        Query(ge=1, le=100),
+    ] = 100,
+    ativo: Annotated[
+        bool | None,
+        Query(),
+    ] = None,
 ) -> list[ClienteRead]:
     return listar_clientes(
         db=db,
@@ -85,8 +120,9 @@ def consultar_clientes(
     response_model=ClienteRead,
 )
 def consultar_cliente(
-    cliente_id: Annotated[int, Path(gt=0)],
+    cliente_id: int,
     db: DatabaseSession,
+    _usuario_atual: UsuarioLeituraAtual,
 ) -> ClienteRead:
     try:
         return obter_cliente(
@@ -106,9 +142,10 @@ def consultar_cliente(
     response_model=ClienteRead,
 )
 def editar_cliente(
-    cliente_id: Annotated[int, Path(gt=0)],
+    cliente_id: int,
     dados: ClienteUpdate,
     db: DatabaseSession,
+    _usuario_atual: UsuarioOperacionalAtual,
 ) -> ClienteRead:
     try:
         return atualizar_cliente(
@@ -133,4 +170,4 @@ def editar_cliente(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=str(erro),
-        ) from erro
+        ) from erro 
