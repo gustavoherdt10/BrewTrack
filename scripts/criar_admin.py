@@ -7,17 +7,12 @@ from app.services.usuario_service import criar_usuario
 
 
 def main() -> None:
-    print(
-        "Criação do primeiro administrador "
-        "do BrewTrack"
-    )
+    print("Criação do primeiro administrador do BrewTrack")
 
     nome = input("Nome: ").strip()
     email = input("E-mail: ").strip().lower()
 
-    senha = getpass(
-        "Senha (mínimo 8 caracteres): "
-    )
+    senha = getpass("Senha (mínimo 8 caracteres): ")
 
     with SessionLocal() as db:
         usuario = criar_usuario(
@@ -31,10 +26,7 @@ def main() -> None:
             ),
         )
 
-    print(
-        f"Administrador criado com ID "
-        f"{usuario.id}."
-    )
+    print(f"Administrador criado com ID {usuario.id}.")
 
 
 if __name__ == "__main__":
