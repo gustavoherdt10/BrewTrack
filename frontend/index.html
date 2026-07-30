@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1"
+    >
+
+    <meta
+        name="description"
+        content="Acesso ao sistema BrewTrack."
+    >
+
+    <title>BrewTrack | Login</title>
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+        crossorigin="anonymous"
+    >
+
+    <link
+        rel="stylesheet"
+        href="assets/css/styles.css"
+    >
+</head>
+
+<body class="login-body">
+    <main class="container-fluid min-vh-100">
+        <div class="row min-vh-100">
+            <section
+                class="col-lg-7 d-none d-lg-flex login-brand-panel"
+            >
+                <div class="login-brand-content">
+                    <div class="brand-symbol">
+                        BT
+                    </div>
+
+                    <p class="login-eyebrow">
+                        Gestão e rastreamento
+                    </p>
+
+                    <h1 class="display-4 fw-bold">
+                        BrewTrack
+                    </h1>
+
+                    <p class="lead login-brand-description">
+                        Controle de estoque, movimentações
+                        e rastreabilidade de barris para
+                        cervejarias.
+                    </p>
+
+                    <div class="login-feature-list">
+                        <div class="login-feature">
+                            <span class="feature-marker"></span>
+                            Estoque centralizado
+                        </div>
+
+                        <div class="login-feature">
+                            <span class="feature-marker"></span>
+                            Histórico de movimentações
+                        </div>
+
+                        <div class="login-feature">
+                            <span class="feature-marker"></span>
+                            Auditoria por usuário
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                class="col-12 col-lg-5 d-flex align-items-center"
+            >
+                <div class="login-form-wrapper">
+                    <div class="d-lg-none mb-4">
+                        <div class="brand-symbol brand-symbol-small">
+                            BT
+                        </div>
+                    </div>
+
+                    <p class="login-eyebrow">
+                        Acesso ao sistema
+                    </p>
+
+                    <h2 class="fw-bold mb-2">
+                        Bem-vindo
+                    </h2>
+
+                    <p class="text-secondary mb-4">
+                        Entre com seu e-mail e senha.
+                    </p>
+
+                    <div
+                        id="alerta-login"
+                        class="alert alert-danger"
+                        role="alert"
+                        hidden
+                    ></div>
+
+                    <form id="form-login" novalidate>
+                        <div class="mb-3">
+                            <label
+                                for="email"
+                                class="form-label"
+                            >
+                                E-mail
+                            </label>
+
+                            <input
+                                type="email"
+                                id="email"
+                                class="form-control form-control-lg"
+                                placeholder="usuario@brewtrack.com"
+                                autocomplete="email"
+                                required
+                            >
+                        </div>
+
+                        <div class="mb-4">
+                            <label
+                                for="senha"
+                                class="form-label"
+                            >
+                                Senha
+                            </label>
+
+                            <input
+                                type="password"
+                                id="senha"
+                                class="form-control form-control-lg"
+                                placeholder="Digite sua senha"
+                                autocomplete="current-password"
+                                required
+                            >
+                        </div>
+
+                        <button
+                            type="submit"
+                            id="botao-entrar"
+                            class="btn btn-brewtrack btn-lg w-100"
+                        >
+                            Entrar
+                        </button>
+                    </form>
+
+                    <p class="login-footer-text">
+                        BrewTrack — Sistema de controle
+                        de barris
+                    </p>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"
+    ></script>
+
+    <script
+        type="module"
+        src="assets/js/login.js"
+    ></script>
+</body>
+</html>
