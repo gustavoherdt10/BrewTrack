@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 96" role="img" aria-labelledby="title desc">
+  <title id="title">BrewTrack</title>
+  <desc id="desc">Marca visual do sistema BrewTrack da Herdt Bier</desc>
+  <g fill="none" fill-rule="evenodd">
+    <path fill="#C7AD72" d="M48 4 82 22v40L48 92 14 62V22z"/>
+    <path fill="#680027" d="M48 13 73 27v30L48 80 23 57V27z"/>
+    <path fill="#C7AD72" d="M36 29h24v7H36zm-5 11h34v7H31zm4 11h26v7H35z"/>
+    <text x="48" y="69" fill="#C7AD72" font-family="Arial, sans-serif" font-size="16" font-weight="700" text-anchor="middle">BT</text>
+    <text x="102" y="48" fill="#680027" font-family="Arial Black, Arial, sans-serif" font-size="38" font-weight="900" letter-spacing="1">BrewTrack</text>
+    <text x="104" y="70" fill="#7B6A50" font-family="Arial, sans-serif" font-size="13" font-weight="700" letter-spacing="4">HERDT BIER</text>
+  </g>
+</svg>
