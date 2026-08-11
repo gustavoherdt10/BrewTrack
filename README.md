@@ -27,3 +27,6 @@ Rodar o Servidor
 
 ```powershell
 uvicorn app.main:app --reload
+
+```powershell
+python -m http.server 5500 --directory frontend
