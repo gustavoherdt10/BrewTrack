@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Controle do estoque e da situação dos barris">
+    <title>BrewTrack | Barris</title>
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+        crossorigin="anonymous"
+    >
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+        rel="stylesheet"
+    >
+    <link rel="stylesheet" href="../assets/css/styles.css">
+</head>
+
+<body class="app-body" data-page="barris">
+    <div class="app-shell">
+        <aside id="app-sidebar" class="app-sidebar" aria-label="Menu lateral">
+            <div class="app-brand">
+                <div class="brand-mini">
+                    <div class="brand-mini-mark" aria-hidden="true">BT</div>
+                    <div>
+                        <div class="brand-mini-title">BrewTrack</div>
+                        <div class="brand-mini-subtitle">Herdt Bier</div>
+                    </div>
+                </div>
+                <button type="button" class="sidebar-close" data-sidebar-close aria-label="Fechar menu">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+
+
+                <nav class="app-nav" aria-label="Navegação principal">
+                    <div class="app-nav-label">Operação</div>
+                    <a href="dashboard.html" class="app-nav-link" data-nav-page="dashboard">
+                        <i class="bi bi-grid-1x2-fill"></i>
+                        <span>Visão geral</span>
+                    </a>
+                    <a href="clientes.html" class="app-nav-link" data-nav-page="clientes">
+                        <i class="bi bi-people-fill"></i>
+                        <span>Clientes</span>
+                    </a>
+                    <a href="barris.html" class="app-nav-link" data-nav-page="barris">
+                        <i class="bi bi-database-fill"></i>
+                        <span>Barris</span>
+                    </a>
+                    <a href="movimentacoes.html" class="app-nav-link" data-nav-page="movimentacoes">
+                        <i class="bi bi-arrow-left-right"></i>
+                        <span>Movimentações</span>
+                    </a>
+
+                    <div class="app-nav-label">Gestão</div>
+                    <a href="usuarios.html" class="app-nav-link" data-nav-page="usuarios" data-admin-only hidden>
+                        <i class="bi bi-person-gear"></i>
+                        <span>Usuários</span>
+                    </a>
+                    <a href="analise.html" class="app-nav-link" data-nav-page="analise">
+                        <i class="bi bi-bar-chart-line-fill"></i>
+                        <span>Análise de dados</span>
+                    </a>
+                </nav>
+
+            <div class="sidebar-footer">
+                <div class="mb-1">A Cerveja da Nossa Terra</div>
+                <div>BrewTrack v0.2 • Ambiente local</div>
+            </div>
+        </aside>
+
+        <div id="sidebar-overlay" class="sidebar-overlay" data-sidebar-close></div>
+
+        <div class="app-content">
+            <header class="app-header">
+                <div class="header-left">
+                    <button type="button" class="sidebar-toggle" data-sidebar-open aria-label="Abrir menu">
+                        <i class="bi bi-list"></i>
+                    </button>
+                    <div>
+                        <h1 class="app-page-title">Barris</h1>
+                        <p class="app-page-subtitle">Controle do estoque e da situação dos barris</p>
+                    </div>
+                </div>
+
+                <div class="header-right">
+                    <div class="user-menu">
+                        <div class="user-details text-end">
+                            <div class="user-name" data-user-name>Carregando...</div>
+                            <div class="user-badge" data-user-profile>—</div>
+                        </div>
+                        <div class="user-avatar" data-user-initials aria-hidden="true">BT</div>
+                    </div>
+                    <button type="button" class="btn btn-outline-brewtrack btn-sm" data-logout>
+                        <i class="bi bi-box-arrow-right me-1"></i>
+                        Sair
+                    </button>
+                </div>
+            </header>
+
+            <main class="content-wrapper">
+                <div id="alerta-global" class="alert alert-danger" role="alert" aria-live="polite" hidden></div>
+                
+                <div class="page-heading">
+                    <div>
+                        <p class="section-kicker">Patrimônio e estoque</p>
+                        <h2>Barris</h2>
+                        <p>Acompanhe código, capacidade, disponibilidade e cliente atual.</p>
+                    </div>
+                    <button type="button" class="btn btn-brewtrack" data-bs-toggle="modal" data-bs-target="#modal-barril">
+                        <i class="bi bi-plus-circle-fill me-1"></i>
+                        Novo barril
+                    </button>
+                </div>
+
+                <section class="row g-3 mb-4">
+                    <div class="col-sm-6 col-lg-3"><article class="metric-card"><p class="metric-label">Total</p><p id="barris-total" class="metric-value">—</p><span class="metric-note">Barris cadastrados</span></article></div>
+                    <div class="col-sm-6 col-lg-3"><article class="metric-card"><p class="metric-label">Disponíveis</p><p id="barris-disponiveis" class="metric-value">—</p><span class="metric-note">Prontos para uso</span></article></div>
+                    <div class="col-sm-6 col-lg-3"><article class="metric-card"><p class="metric-label">Com clientes</p><p id="barris-com-clientes" class="metric-value">—</p><span class="metric-note">Em circulação</span></article></div>
+                    <div class="col-sm-6 col-lg-3"><article class="metric-card"><p class="metric-label">Capacidade total</p><p id="barris-litros" class="metric-value">—</p><span class="metric-note">Litros nominais</span></article></div>
+                </section>
+
+                <section class="card surface-card">
+                    <div class="filter-bar">
+                        <div class="flex-grow-1"><label for="busca-barril" class="visually-hidden">Buscar barril</label><input id="busca-barril" class="form-control" type="search" placeholder="Buscar pelo código do barril"></div>
+                        <select id="filtro-status-barril" class="form-select" style="max-width: 210px" aria-label="Filtrar status">
+                            <option value="">Todos os status</option><option value="DISPONIVEL">Disponível</option><option value="COM_CLIENTE">Com cliente</option>
+                        </select>
+                        <button id="botao-atualizar-barris" type="button" class="btn btn-outline-brewtrack"><i class="bi bi-arrow-clockwise"></i> Atualizar</button>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table app-table">
+                            <thead><tr><th>ID</th><th>Código</th><th>Capacidade</th><th>Status</th><th>Cliente atual</th><th>Aquisição</th><th>Observação</th></tr></thead>
+                            <tbody id="tabela-barris"><tr><td colspan="7" class="table-empty">Carregando barris...</td></tr></tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <div class="modal fade" id="modal-barril" tabindex="-1" aria-labelledby="titulo-modal-barril" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <div><p class="mb-1 small text-white-50">Entrada no estoque</p><h2 id="titulo-modal-barril" class="modal-title h5">Novo barril</h2></div>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                            </div>
+                            <form id="form-barril" novalidate>
+                                <div class="modal-body p-4">
+                                    <div id="alerta-barril" class="alert alert-danger" role="alert" hidden></div>
+                                    <div class="info-panel mb-4"><i class="bi bi-info-circle me-1"></i> O novo barril será cadastrado automaticamente com status <strong>DISPONÍVEL</strong>.</div>
+                                    <div class="row g-3">
+                                        <div class="col-md-5"><label for="barril-codigo" class="form-label">Código *</label><input id="barril-codigo" class="form-control text-uppercase" maxlength="50" placeholder="BR-050-0001" required></div>
+                                        <div class="col-md-3"><label for="barril-capacidade" class="form-label">Capacidade *</label><select id="barril-capacidade" class="form-select" required><option value="15">15 litros</option><option value="30">30 litros</option><option value="50" selected>50 litros</option></select></div>
+                                        <div class="col-md-4"><label for="barril-data-aquisicao" class="form-label">Data de aquisição</label><input id="barril-data-aquisicao" class="form-control" type="date"></div>
+                                        <div class="col-12"><label for="barril-observacao" class="form-label">Observação</label><textarea id="barril-observacao" class="form-control" rows="3" placeholder="Ex.: Barril de inox cadastrado no estoque inicial."></textarea></div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer"><button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button><button id="botao-salvar-barril" type="submit" class="btn btn-brewtrack">Salvar barril</button></div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+            </main>
+
+            <footer class="app-footer">
+                <div>
+                    <strong>Herdt Bier</strong>
+                    <div>Sistema acadêmico para controle e rastreamento de barris.</div>
+                </div>
+                <div>© <span data-current-year></span> BrewTrack • TCC Sistemas de Informação</div>
+            </footer>
+        </div>
+    </div>
+
+    <script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"
+    ></script>
+    <script type="module" src="../assets/js/layout.js"></script>
+    <script type="module" src="../assets/js/barris.js"></script>
+</body>
+</html>

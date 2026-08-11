@@ -2,13 +2,9 @@
 <html lang="pt-BR">
 <head>
     <meta charset="utf-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1"
-    >
-
-    <title>BrewTrack | Painel</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Acompanhamento operacional do estoque de barris">
+    <title>BrewTrack | Visão geral</title>
 
     <link
         href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
@@ -16,255 +12,252 @@
         integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
         crossorigin="anonymous"
     >
-
     <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
         rel="stylesheet"
-        href="../assets/css/styles.css"
     >
+    <link rel="stylesheet" href="../assets/css/styles.css">
 </head>
 
-<body class="app-body">
-    <div class="container-fluid">
-        <div class="row">
-            <aside
-                class="col-12 col-lg-2 app-sidebar p-0"
-            >
-                <div class="app-brand">
-                    <div class="app-brand-mark">
-                        BT
-                    </div>
-
+<body class="app-body" data-page="dashboard">
+    <div class="app-shell">
+        <aside id="app-sidebar" class="app-sidebar" aria-label="Menu lateral">
+            <div class="app-brand">
+                <div class="brand-mini">
+                    <div class="brand-mini-mark" aria-hidden="true">BT</div>
                     <div>
-                        <strong>BrewTrack</strong>
+                        <div class="brand-mini-title">BrewTrack</div>
+                        <div class="brand-mini-subtitle">Herdt Bier</div>
+                    </div>
+                </div>
+                <button type="button" class="sidebar-close" data-sidebar-close aria-label="Fechar menu">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
 
-                        <div class="small text-white-50">
-                            Controle de barris
-                        </div>
+
+                <nav class="app-nav" aria-label="Navegação principal">
+                    <div class="app-nav-label">Operação</div>
+                    <a href="dashboard.html" class="app-nav-link" data-nav-page="dashboard">
+                        <i class="bi bi-grid-1x2-fill"></i>
+                        <span>Visão geral</span>
+                    </a>
+                    <a href="clientes.html" class="app-nav-link" data-nav-page="clientes">
+                        <i class="bi bi-people-fill"></i>
+                        <span>Clientes</span>
+                    </a>
+                    <a href="barris.html" class="app-nav-link" data-nav-page="barris">
+                        <i class="bi bi-database-fill"></i>
+                        <span>Barris</span>
+                    </a>
+                    <a href="movimentacoes.html" class="app-nav-link" data-nav-page="movimentacoes">
+                        <i class="bi bi-arrow-left-right"></i>
+                        <span>Movimentações</span>
+                    </a>
+
+                    <div class="app-nav-label">Gestão</div>
+                    <a href="usuarios.html" class="app-nav-link" data-nav-page="usuarios" data-admin-only hidden>
+                        <i class="bi bi-person-gear"></i>
+                        <span>Usuários</span>
+                    </a>
+                    <a href="analise.html" class="app-nav-link" data-nav-page="analise">
+                        <i class="bi bi-bar-chart-line-fill"></i>
+                        <span>Análise de dados</span>
+                    </a>
+                </nav>
+
+            <div class="sidebar-footer">
+                <div class="mb-1">A Cerveja da Nossa Terra</div>
+                <div>BrewTrack v0.2 • Ambiente local</div>
+            </div>
+        </aside>
+
+        <div id="sidebar-overlay" class="sidebar-overlay" data-sidebar-close></div>
+
+        <div class="app-content">
+            <header class="app-header">
+                <div class="header-left">
+                    <button type="button" class="sidebar-toggle" data-sidebar-open aria-label="Abrir menu">
+                        <i class="bi bi-list"></i>
+                    </button>
+                    <div>
+                        <h1 class="app-page-title">Visão geral</h1>
+                        <p class="app-page-subtitle">Acompanhamento operacional do estoque de barris</p>
                     </div>
                 </div>
 
-                <nav class="app-nav">
-                    <a
-                        href="dashboard.html"
-                        class="app-nav-link active"
-                    >
-                        Visão geral
-                    </a>
+                <div class="header-right">
+                    <div class="user-menu">
+                        <div class="user-details text-end">
+                            <div class="user-name" data-user-name>Carregando...</div>
+                            <div class="user-badge" data-user-profile>—</div>
+                        </div>
+                        <div class="user-avatar" data-user-initials aria-hidden="true">BT</div>
+                    </div>
+                    <button type="button" class="btn btn-outline-brewtrack btn-sm" data-logout>
+                        <i class="bi bi-box-arrow-right me-1"></i>
+                        Sair
+                    </button>
+                </div>
+            </header>
 
-                    <a
-                        href="#"
-                        class="app-nav-link"
-                    >
-                        Clientes
-                    </a>
-
-                    <a
-                        href="#"
-                        class="app-nav-link"
-                    >
-                        Barris
-                    </a>
-
-                    <a
-                        href="#"
-                        class="app-nav-link"
-                    >
-                        Movimentações
-                    </a>
-
-                    <a
-                        href="#"
-                        class="app-nav-link"
-                        id="menu-usuarios"
-                        hidden
-                    >
-                        Usuários
-                    </a>
-
-                    <a
-                        href="#"
-                        class="app-nav-link"
-                    >
-                        Análise de dados
-                    </a>
-                </nav>
-            </aside>
-
-            <main class="col-12 col-lg-10 app-main p-0">
-                <header
-                    class="app-header d-flex flex-wrap gap-3 justify-content-between align-items-center"
-                >
-                    <div>
-                        <h1 class="h4 mb-1">
-                            Visão geral
-                        </h1>
-
-                        <p class="text-secondary mb-0">
-                            Acompanhamento inicial do BrewTrack
+            <main class="content-wrapper">
+                <div id="alerta-global" class="alert alert-danger" role="alert" aria-live="polite" hidden></div>
+                
+                <section class="hero-panel mb-4">
+                    <div class="hero-content">
+                        <p class="section-kicker text-gold">Painel operacional</p>
+                        <h2>Controle seus barris do estoque ao retorno.</h2>
+                        <p>
+                            Consulte a disponibilidade, registre saídas e retornos e mantenha
+                            o histórico de cada movimentação em um único sistema.
                         </p>
+                        <div class="hero-actions">
+                            <a href="movimentacoes.html" class="btn btn-light">
+                                <i class="bi bi-arrow-left-right me-1"></i>
+                                Registrar movimentação
+                            </a>
+                            <a href="barris.html" class="btn btn-outline-light">
+                                <i class="bi bi-database me-1"></i>
+                                Consultar barris
+                            </a>
+                        </div>
                     </div>
+                    <img class="hero-kegs" src="../assets/img/barris-herdt.jpg" alt="" aria-hidden="true">
+                </section>
 
-                    <div
-                        class="d-flex align-items-center gap-3"
-                    >
-                        <div class="text-end">
-                            <div
-                                id="nome-usuario"
-                                class="fw-semibold"
-                            >
-                                Carregando...
+                <section class="row g-3 mb-4" aria-label="Indicadores principais">
+                    <div class="col-12 col-sm-6 col-xl-3">
+                        <article class="metric-card">
+                            <div class="metric-top">
+                                <div>
+                                    <p class="metric-label">Clientes ativos</p>
+                                    <p id="metric-clientes" class="metric-value">—</p>
+                                    <span class="metric-note">Base cadastrada</span>
+                                </div>
+                                <div class="metric-icon"><i class="bi bi-people-fill"></i></div>
                             </div>
-
-                            <div
-                                id="perfil-usuario"
-                                class="user-badge"
-                            >
-                                —
+                        </article>
+                    </div>
+                    <div class="col-12 col-sm-6 col-xl-3">
+                        <article class="metric-card">
+                            <div class="metric-top">
+                                <div>
+                                    <p class="metric-label">Barris disponíveis</p>
+                                    <p id="metric-disponiveis" class="metric-value">—</p>
+                                    <span class="metric-note">Prontos para saída</span>
+                                </div>
+                                <div class="metric-icon"><i class="bi bi-check-circle-fill"></i></div>
                             </div>
-                        </div>
-
-                        <button
-                            type="button"
-                            id="botao-sair"
-                            class="btn btn-outline-secondary"
-                        >
-                            Sair
-                        </button>
+                        </article>
                     </div>
-                </header>
-
-                <section class="content-wrapper">
-                    <div
-                        id="alerta-dashboard"
-                        class="alert alert-danger"
-                        role="alert"
-                        hidden
-                    ></div>
-
-                    <div class="row g-4">
-                        <div class="col-12 col-md-6 col-xl-3">
-                            <article class="card metric-card">
-                                <div class="card-body">
-                                    <p class="metric-label">
-                                        Clientes
-                                    </p>
-
-                                    <p class="metric-value">
-                                        —
-                                    </p>
-
-                                    <small class="text-secondary">
-                                        Integração na próxima etapa
-                                    </small>
+                    <div class="col-12 col-sm-6 col-xl-3">
+                        <article class="metric-card">
+                            <div class="metric-top">
+                                <div>
+                                    <p class="metric-label">Com clientes</p>
+                                    <p id="metric-com-clientes" class="metric-value">—</p>
+                                    <span class="metric-note">Em circulação</span>
                                 </div>
-                            </article>
-                        </div>
-
-                        <div class="col-12 col-md-6 col-xl-3">
-                            <article class="card metric-card">
-                                <div class="card-body">
-                                    <p class="metric-label">
-                                        Barris disponíveis
-                                    </p>
-
-                                    <p class="metric-value">
-                                        —
-                                    </p>
-
-                                    <small class="text-secondary">
-                                        Integração na próxima etapa
-                                    </small>
+                                <div class="metric-icon"><i class="bi bi-truck"></i></div>
+                            </div>
+                        </article>
+                    </div>
+                    <div class="col-12 col-sm-6 col-xl-3">
+                        <article class="metric-card">
+                            <div class="metric-top">
+                                <div>
+                                    <p class="metric-label">Movimentações</p>
+                                    <p id="metric-movimentacoes" class="metric-value">—</p>
+                                    <span class="metric-note">Histórico consultado</span>
                                 </div>
-                            </article>
-                        </div>
+                                <div class="metric-icon"><i class="bi bi-clock-history"></i></div>
+                            </div>
+                        </article>
+                    </div>
+                </section>
 
-                        <div class="col-12 col-md-6 col-xl-3">
-                            <article class="card metric-card">
-                                <div class="card-body">
-                                    <p class="metric-label">
-                                        Barris com clientes
-                                    </p>
-
-                                    <p class="metric-value">
-                                        —
-                                    </p>
-
-                                    <small class="text-secondary">
-                                        Integração na próxima etapa
-                                    </small>
-                                </div>
-                            </article>
-                        </div>
-
-                        <div class="col-12 col-md-6 col-xl-3">
-                            <article class="card metric-card">
-                                <div class="card-body">
-                                    <p class="metric-label">
-                                        Movimentações
-                                    </p>
-
-                                    <p class="metric-value">
-                                        —
-                                    </p>
-
-                                    <small class="text-secondary">
-                                        Integração na próxima etapa
-                                    </small>
-                                </div>
-                            </article>
-                        </div>
+                <section class="row g-4 mb-4">
+                    <div class="col-12 col-xl-7">
+                        <article class="card surface-card">
+                            <div class="card-header">
+                                <h2>Movimentações recentes</h2>
+                                <a href="movimentacoes.html" class="btn btn-sm btn-outline-brewtrack">Ver histórico</a>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table app-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Data</th>
+                                            <th>Tipo</th>
+                                            <th>Barril</th>
+                                            <th>Cliente</th>
+                                            <th>Responsável</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tabela-movimentacoes-recentes">
+                                        <tr><td colspan="5" class="table-empty">Carregando movimentações...</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </article>
                     </div>
 
-                    <div class="card metric-card mt-4">
-                        <div class="card-body p-4">
-                            <h2 class="h5">
-                                Sessão autenticada
-                            </h2>
+                    <div class="col-12 col-xl-5">
+                        <article class="card surface-card mb-4">
+                            <div class="card-header"><h2>Ações rápidas</h2></div>
+                            <div class="card-body d-grid gap-2">
+                                <a href="clientes.html#novo" class="quick-action">
+                                    <span class="quick-action-icon"><i class="bi bi-person-plus-fill"></i></span>
+                                    <span><strong>Cadastrar cliente</strong><small>Adicionar novo ponto de atendimento</small></span>
+                                </a>
+                                <a href="barris.html#novo" class="quick-action">
+                                    <span class="quick-action-icon"><i class="bi bi-plus-circle-fill"></i></span>
+                                    <span><strong>Cadastrar barril</strong><small>Incluir patrimônio no estoque</small></span>
+                                </a>
+                                <a href="movimentacoes.html" class="quick-action">
+                                    <span class="quick-action-icon"><i class="bi bi-arrow-repeat"></i></span>
+                                    <span><strong>Registrar movimentação</strong><small>Saída ou retorno de cliente</small></span>
+                                </a>
+                            </div>
+                        </article>
 
-                            <p class="text-secondary">
-                                O dashboard já está protegido pelo
-                                token JWT e conectado ao endpoint
-                                <code>/auth/me</code>.
-                            </p>
+                        <article class="card surface-card">
+                            <div class="card-header"><h2>Situação do estoque</h2></div>
+                            <div class="card-body">
+                                <div class="status-line">
+                                    <div class="status-line-head"><span>Disponíveis</span><strong id="percentual-disponiveis">—</strong></div>
+                                    <div class="progress"><div id="barra-disponiveis" class="progress-bar progress-bar-available" style="width: 0%"></div></div>
+                                </div>
+                                <div class="status-line">
+                                    <div class="status-line-head"><span>Com clientes</span><strong id="percentual-com-clientes">—</strong></div>
+                                    <div class="progress"><div id="barra-com-clientes" class="progress-bar progress-bar-client" style="width: 0%"></div></div>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                </section>
 
-                            <dl class="row mb-0">
-                                <dt class="col-sm-3">
-                                    ID do usuário
-                                </dt>
-
-                                <dd
-                                    id="id-usuario"
-                                    class="col-sm-9"
-                                >
-                                    —
-                                </dd>
-
-                                <dt class="col-sm-3">
-                                    E-mail
-                                </dt>
-
-                                <dd
-                                    id="email-usuario"
-                                    class="col-sm-9"
-                                >
-                                    —
-                                </dd>
-
-                                <dt class="col-sm-3">
-                                    Perfil
-                                </dt>
-
-                                <dd
-                                    id="perfil-detalhe"
-                                    class="col-sm-9"
-                                >
-                                    —
-                                </dd>
-                            </dl>
+                <section class="card surface-card">
+                    <div class="card-header"><h2>Sessão autenticada</h2></div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-md-4"><span class="text-secondary small d-block">ID do usuário</span><strong data-user-id>—</strong></div>
+                            <div class="col-md-4"><span class="text-secondary small d-block">E-mail</span><strong data-user-email>—</strong></div>
+                            <div class="col-md-4"><span class="text-secondary small d-block">Perfil</span><strong data-user-profile-detail>—</strong></div>
                         </div>
                     </div>
                 </section>
+
             </main>
+
+            <footer class="app-footer">
+                <div>
+                    <strong>Herdt Bier</strong>
+                    <div>Sistema acadêmico para controle e rastreamento de barris.</div>
+                </div>
+                <div>© <span data-current-year></span> BrewTrack • TCC Sistemas de Informação</div>
+            </footer>
         </div>
     </div>
 
@@ -273,10 +266,7 @@
         integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
         crossorigin="anonymous"
     ></script>
-
-    <script
-        type="module"
-        src="../assets/js/dashboard.js"
-    ></script>
+    <script type="module" src="../assets/js/layout.js"></script>
+    <script type="module" src="../assets/js/dashboard.js"></script>
 </body>
 </html>

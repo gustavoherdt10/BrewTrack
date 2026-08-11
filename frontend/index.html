@@ -2,17 +2,8 @@
 <html lang="pt-BR">
 <head>
     <meta charset="utf-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1"
-    >
-
-    <meta
-        name="description"
-        content="Acesso ao sistema BrewTrack."
-    >
-
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Acesso ao sistema BrewTrack para gestão e rastreamento de barris da Herdt Bier.">
     <title>BrewTrack | Login</title>
 
     <link
@@ -21,121 +12,154 @@
         integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
         crossorigin="anonymous"
     >
-
     <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
         rel="stylesheet"
-        href="assets/css/styles.css"
     >
+    <link rel="stylesheet" href="assets/css/styles.css">
 </head>
 
 <body class="login-body">
-    <main class="container-fluid min-vh-100">
-        <div class="row min-vh-100">
-            <section
-                class="col-lg-7 d-none d-lg-flex login-brand-panel"
-            >
-                <div class="login-brand-content">
-                    <div class="brand-symbol">
-                        BT
+    <main class="login-shell">
+        <section class="login-brand-panel" aria-label="Apresentação do BrewTrack">
+            <div class="login-brand-inner">
+                <div class="login-brand-top">
+                    <div class="login-brand-name">
+                        <div class="login-brand-crest" aria-hidden="true">HB</div>
+                        <div class="login-brand-wordmark">
+                            <strong>HERDT</strong>
+                            <small>BIER</small>
+                        </div>
                     </div>
 
-                    <p class="login-eyebrow">
-                        Gestão e rastreamento
-                    </p>
+                    <span class="login-system-pill">
+                        <i class="bi bi-shield-lock me-1"></i>
+                        Sistema interno
+                    </span>
+                </div>
 
-                    <h1 class="display-4 fw-bold">
-                        BrewTrack
+                <div class="login-brand-content">
+                    <p class="login-eyebrow text-gold">Gestão e rastreamento</p>
+                    <h1 class="login-title">
+                        Brew
+                        <span>Track</span>
                     </h1>
 
-                    <p class="lead login-brand-description">
-                        Controle de estoque, movimentações
-                        e rastreabilidade de barris para
-                        cervejarias.
+                    <p class="login-brand-description">
+                        Controle de estoque, movimentações e rastreabilidade de barris
+                        em uma interface criada para a rotina da cervejaria.
                     </p>
 
-                    <div class="login-feature-list">
-                        <div class="login-feature">
-                            <span class="feature-marker"></span>
+                    <div class="login-feature-list" aria-label="Principais recursos">
+                        <span class="login-feature">
+                            <i class="bi bi-database-check"></i>
                             Estoque centralizado
-                        </div>
-
-                        <div class="login-feature">
-                            <span class="feature-marker"></span>
-                            Histórico de movimentações
-                        </div>
-
-                        <div class="login-feature">
-                            <span class="feature-marker"></span>
-                            Auditoria por usuário
-                        </div>
+                        </span>
+                        <span class="login-feature">
+                            <i class="bi bi-arrow-left-right"></i>
+                            Movimentações auditáveis
+                        </span>
+                        <span class="login-feature">
+                            <i class="bi bi-graph-up-arrow"></i>
+                            Base para análise de dados
+                        </span>
                     </div>
                 </div>
-            </section>
 
-            <section
-                class="col-12 col-lg-5 d-flex align-items-center"
-            >
-                <div class="login-form-wrapper">
-                    <div class="d-lg-none mb-4">
-                        <div class="brand-symbol brand-symbol-small">
-                            BT
-                        </div>
-                    </div>
+                <figure class="login-keg-visual" aria-hidden="true">
+                    <img src="assets/img/barris-herdt.jpg" alt="">
+                </figure>
 
-                    <p class="login-eyebrow">
-                        Acesso ao sistema
-                    </p>
+                <div class="login-brand-bottom">
+                    <span>A Cerveja da Nossa Terra</span>
+                    <span>BrewTrack v0.2</span>
+                </div>
+            </div>
+        </section>
 
-                    <h2 class="fw-bold mb-2">
-                        Bem-vindo
-                    </h2>
+        <section class="login-form-panel">
+            <div class="login-form-wrapper">
+                <div class="login-mobile-brand">
+                    <img
+                        src="assets/img/brewtrack-logo.svg"
+                        alt="BrewTrack — Herdt Bier"
+                        width="245"
+                        height="66"
+                    >
+                </div>
 
-                    <p class="text-secondary mb-4">
-                        Entre com seu e-mail e senha.
+                <div class="login-form-card">
+                    <p class="login-eyebrow">Acesso ao sistema</p>
+                    <h2>Bem-vindo ao BrewTrack</h2>
+                    <p class="login-form-note mb-4">
+                        Informe suas credenciais para acessar o painel de controle.
                     </p>
 
                     <div
                         id="alerta-login"
                         class="alert alert-danger"
                         role="alert"
+                        aria-live="polite"
                         hidden
                     ></div>
 
                     <form id="form-login" novalidate>
                         <div class="mb-3">
-                            <label
-                                for="email"
-                                class="form-label"
-                            >
-                                E-mail
-                            </label>
-
-                            <input
-                                type="email"
-                                id="email"
-                                class="form-control form-control-lg"
-                                placeholder="usuario@brewtrack.com"
-                                autocomplete="email"
-                                required
-                            >
+                            <label for="email" class="form-label">E-mail</label>
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="bi bi-envelope"></i>
+                                </span>
+                                <input
+                                    type="email"
+                                    id="email"
+                                    class="form-control form-control-lg"
+                                    placeholder="usuario@brewtrack.com"
+                                    autocomplete="email"
+                                    maxlength="180"
+                                    required
+                                >
+                            </div>
                         </div>
 
-                        <div class="mb-4">
-                            <label
-                                for="senha"
-                                class="form-label"
-                            >
-                                Senha
-                            </label>
+                        <div class="mb-3">
+                            <label for="senha" class="form-label">Senha</label>
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="bi bi-key"></i>
+                                </span>
+                                <input
+                                    type="password"
+                                    id="senha"
+                                    class="form-control form-control-lg"
+                                    placeholder="Digite sua senha"
+                                    autocomplete="current-password"
+                                    minlength="8"
+                                    maxlength="128"
+                                    required
+                                >
+                                <button
+                                    type="button"
+                                    id="botao-mostrar-senha"
+                                    class="btn password-toggle"
+                                    aria-label="Mostrar senha"
+                                    aria-pressed="false"
+                                >
+                                    <i class="bi bi-eye"></i>
+                                </button>
+                            </div>
+                        </div>
 
-                            <input
-                                type="password"
-                                id="senha"
-                                class="form-control form-control-lg"
-                                placeholder="Digite sua senha"
-                                autocomplete="current-password"
-                                required
-                            >
+                        <div class="d-flex justify-content-between align-items-center gap-3 mb-4">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="lembrar-email">
+                                <label class="form-check-label small" for="lembrar-email">
+                                    Lembrar e-mail
+                                </label>
+                            </div>
+                            <span class="small text-secondary">
+                                Acesso protegido por JWT
+                            </span>
                         </div>
 
                         <button
@@ -143,17 +167,17 @@
                             id="botao-entrar"
                             class="btn btn-brewtrack btn-lg w-100"
                         >
+                            <i class="bi bi-box-arrow-in-right me-2"></i>
                             Entrar
                         </button>
                     </form>
 
                     <p class="login-footer-text">
-                        BrewTrack — Sistema de controle
-                        de barris
+                        Uso restrito aos usuários autorizados da Cervejaria Herdt Bier.
                     </p>
                 </div>
-            </section>
-        </div>
+            </div>
+        </section>
     </main>
 
     <script
@@ -161,10 +185,6 @@
         integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
         crossorigin="anonymous"
     ></script>
-
-    <script
-        type="module"
-        src="assets/js/login.js"
-    ></script>
+    <script type="module" src="assets/js/login.js"></script>
 </body>
 </html>
