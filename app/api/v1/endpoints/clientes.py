@@ -170,4 +170,4 @@ def editar_cliente(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=str(erro),
-        ) from erro 
+        ) from erro

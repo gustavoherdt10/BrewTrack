@@ -132,7 +132,7 @@ formulario.addEventListener("submit", async (event) => {
 
         formulario.reset();
         formulario.classList.remove("was-validated");
-        document.querySelector("#cliente-tipo").value = "PESSOA_JURIDICA";
+        document.querySelector("#cliente-tipo").value = "JURIDICA";
         fecharModal(modalElemento);
         await carregarClientes();
     } catch (erro) {
