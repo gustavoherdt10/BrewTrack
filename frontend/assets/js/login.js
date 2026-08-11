@@ -1,72 +1,59 @@
 import { apiFetch } from "./api.js";
+import { API_ROUTES } from "./config.js";
 import {
     encerrarSessao,
+    obterEmailLembrado,
     possuiSessao,
+    salvarEmailLembrado,
     salvarToken,
     salvarUsuario,
 } from "./session.js";
+import {
+    esconderAlerta,
+    mostrarAlerta,
+} from "./ui.js";
 
+const DASHBOARD_URL = new URL("../../pages/dashboard.html", import.meta.url).href;
 
-const DASHBOARD_URL = new URL(
-    "../../pages/dashboard.html",
-    import.meta.url,
-).href;
-
-
-const formulario = document.querySelector(
-    "#form-login",
-);
-
-const campoEmail = document.querySelector(
-    "#email",
-);
-
-const campoSenha = document.querySelector(
-    "#senha",
-);
-
-const botaoEntrar = document.querySelector(
-    "#botao-entrar",
-);
-
-const alerta = document.querySelector(
-    "#alerta-login",
-);
-
-
-function mostrarMensagem(
-    mensagem,
-    tipo = "danger",
-) {
-    alerta.className = `alert alert-${tipo}`;
-    alerta.textContent = mensagem;
-    alerta.hidden = false;
-}
-
-
-function esconderMensagem() {
-    alerta.hidden = true;
-    alerta.textContent = "";
-}
-
+const formulario = document.querySelector("#form-login");
+const campoEmail = document.querySelector("#email");
+const campoSenha = document.querySelector("#senha");
+const lembrarEmail = document.querySelector("#lembrar-email");
+const botaoEntrar = document.querySelector("#botao-entrar");
+const botaoMostrarSenha = document.querySelector("#botao-mostrar-senha");
+const alerta = document.querySelector("#alerta-login");
 
 function alterarCarregamento(carregando) {
     botaoEntrar.disabled = carregando;
+    botaoEntrar.innerHTML = carregando
+        ? `<span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>Entrando...`
+        : `<i class="bi bi-box-arrow-in-right me-2"></i>Entrar`;
+}
 
-    if (carregando) {
-        botaoEntrar.innerHTML = `
-            <span
-                class="spinner-border spinner-border-sm"
-                aria-hidden="true"
-            ></span>
-            Entrando...
-        `;
+function configurarEmailLembrado() {
+    const emailSalvo = obterEmailLembrado();
+
+    if (!emailSalvo) {
+        campoEmail.focus();
         return;
     }
 
-    botaoEntrar.textContent = "Entrar";
+    campoEmail.value = emailSalvo;
+    lembrarEmail.checked = true;
+    campoSenha.focus();
 }
 
+function configurarExibicaoSenha() {
+    botaoMostrarSenha.addEventListener("click", () => {
+        const mostrar = campoSenha.type === "password";
+        campoSenha.type = mostrar ? "text" : "password";
+        botaoMostrarSenha.setAttribute("aria-pressed", String(mostrar));
+        botaoMostrarSenha.setAttribute("aria-label", mostrar ? "Ocultar senha" : "Mostrar senha");
+        botaoMostrarSenha.innerHTML = mostrar
+            ? `<i class="bi bi-eye-slash"></i>`
+            : `<i class="bi bi-eye"></i>`;
+    });
+}
 
 async function verificarSessaoExistente() {
     if (!possuiSessao()) {
@@ -74,83 +61,58 @@ async function verificarSessaoExistente() {
     }
 
     try {
-        const usuario = await apiFetch(
-            "/auth/me",
-        );
-
+        const usuario = await apiFetch(API_ROUTES.usuarioAtual);
         salvarUsuario(usuario);
-
-        window.location.href = DASHBOARD_URL;
+        window.location.replace(DASHBOARD_URL);
     } catch {
         encerrarSessao();
     }
 }
 
+formulario.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    esconderAlerta(alerta);
 
-formulario.addEventListener(
-    "submit",
-    async (event) => {
-        event.preventDefault();
+    const email = campoEmail.value.trim().toLowerCase();
+    const senha = campoSenha.value;
 
-        esconderMensagem();
+    if (!formulario.checkValidity() || !email || !senha) {
+        formulario.classList.add("was-validated");
+        mostrarAlerta(alerta, "Informe um e-mail válido e a senha de acesso.");
+        return;
+    }
 
-        const email = campoEmail.value
-            .trim()
-            .toLowerCase();
+    alterarCarregamento(true);
 
-        const senha = campoSenha.value;
+    try {
+        const respostaLogin = await apiFetch(API_ROUTES.login, {
+            method: "POST",
+            auth: false,
+            body: JSON.stringify({ email, senha }),
+        });
 
-        if (!email || !senha) {
-            mostrarMensagem(
-                "Informe o e-mail e a senha.",
-            );
-            return;
+        if (!respostaLogin?.access_token) {
+            throw new Error("A API não retornou o access_token.");
         }
 
-        alterarCarregamento(true);
+        salvarToken(respostaLogin.access_token);
 
-        try {
-            const respostaLogin = await apiFetch(
-                "/auth/login",
-                {
-                    method: "POST",
-                    body: JSON.stringify({
-                        email,
-                        senha,
-                    }),
-                },
-            );
+        const usuario = await apiFetch(API_ROUTES.usuarioAtual);
+        salvarUsuario(usuario);
+        salvarEmailLembrado(lembrarEmail.checked ? email : "");
 
-            if (!respostaLogin.access_token) {
-                throw new Error(
-                    "A API não retornou o access_token.",
-                );
-            }
+        window.location.replace(DASHBOARD_URL);
+    } catch (erro) {
+        encerrarSessao();
+        mostrarAlerta(
+            alerta,
+            erro.message ?? "Não foi possível realizar o login.",
+        );
+    } finally {
+        alterarCarregamento(false);
+    }
+});
 
-            salvarToken(
-                respostaLogin.access_token,
-            );
-
-            const usuario = await apiFetch(
-                "/auth/me",
-            );
-
-            salvarUsuario(usuario);
-
-            window.location.href =
-                DASHBOARD_URL;
-        } catch (erro) {
-            encerrarSessao();
-
-            mostrarMensagem(
-                erro.message ??
-                    "Não foi possível realizar o login.",
-            );
-        } finally {
-            alterarCarregamento(false);
-        }
-    },
-);
-
-
+configurarEmailLembrado();
+configurarExibicaoSenha();
 verificarSessaoExistente();
